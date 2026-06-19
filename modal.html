@@ -8,6 +8,8 @@
   <!-- ここからモーダルスクリプトテスト -->
 <script>
 __stt.on('selectLang', function(event) {
+    const originalLang = 'ja'
+    if (event.lang == originalLang) return;
     // === 重複表示防止ガード ===
     if (document.getElementById('custom-modal-overlay')) return;
 
@@ -124,7 +126,7 @@ __stt.on('selectLang', function(event) {
         closeModal();
 
         // 2. ご指定のコードを実行
-        __stt.set('lang', 'en');
+        __stt.set('lang', originalLang);
     });
 
     // 言語切り替え（確定）ボタン押下時
