@@ -8,8 +8,7 @@
   <!-- ここからモーダルスクリプトテスト -->
 <script>
 __stt.on('selectLang', function(event) {
-    // === 重複防止チェック ===
-    // すでにモーダルが表示されている場合は重ねて表示しない
+    // === 重複表示防止ガード ===
     if (document.getElementById('custom-modal-overlay')) return;
 
     // === 1. HTML構造の作成 ===
@@ -112,25 +111,20 @@ __stt.on('selectLang', function(event) {
     document.head.appendChild(style);
 
     // === 3. ボタンのイベント処理 ===
-    // モーダルを閉じる共通関数
     function closeModal() {
         if (overlay.parentNode) overlay.remove();
         if (style.parentNode) style.remove();
     }
 
-    // キャンセルボタン押下時（1回のクリックで即時実行）
+    // キャンセルボタン押下時
     document.getElementById('modal-btn-cancel').addEventListener('click', function(e) {
-        e.preventDefault(); // 親要素へのイベント伝播やデフォルト挙動を阻止
+        e.preventDefault();
         
-        // 1. まず確実に画面からモーダル要素を消す
+        // 1. 即座にモーダルを削除
         closeModal();
 
-        // 2. その後、ご指定のバック処理・画面遷移を行う
-        __stt.set('lang', 'ja');
-        const match = location.search.match(/\?from\=(.*)/);
-        if (match && match[1]) {
-            location.href = match[1];
-        }
+        // 2. ご指定のコードを実行
+        __stt.set('lang', 'en');
     });
 
     // 言語切り替え（確定）ボタン押下時
@@ -138,7 +132,6 @@ __stt.on('selectLang', function(event) {
         e.preventDefault();
         closeModal();
         // 確定時の処理をここに記述
-        console.log('Language transition confirmed.');
     });
 });
 </script>
