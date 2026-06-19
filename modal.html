@@ -12,7 +12,6 @@ __stt.on('selectLang', function(event) {
     if (event.lang == originalLang) return;
     
     // === 既存モーダルの上書き（差し替え）処理 ===
-    // すでにモーダルが表示されている場合、古いモーダルとスタイルシートを削除して描き替える
     const existingOverlay = document.getElementById('custom-modal-overlay');
     const existingStyle = document.getElementById('custom-modal-style');
     if (existingOverlay) existingOverlay.remove();
@@ -54,18 +53,15 @@ __stt.on('selectLang', function(event) {
         }
     };
 
-    // 該当する言語がない場合のデフォルトは英語（en）
     const currentText = textData[event.lang] || textData['en'];
 
     // === 1. HTML構造の作成 ===
     const overlay = document.createElement('div');
     overlay.id = 'custom-modal-overlay';
-    // 翻訳除外属性を追加
     overlay.setAttribute('data-stt-ignore', '');
 
     const modal = document.createElement('div');
     modal.id = 'custom-modal';
-    // 念のためモーダル本体にも翻訳除外属性を追加
     modal.setAttribute('data-stt-ignore', '');
 
     modal.innerHTML = `
@@ -81,78 +77,34 @@ __stt.on('selectLang', function(event) {
     overlay.appendChild(modal);
     document.body.appendChild(overlay);
 
-    // === 2. CSSスタイルの適用 ===
+    // === 2. CSSスタイルの適用（リファクタリングして短縮） ===
     const style = document.createElement('style');
     style.id = 'custom-modal-style';
     style.innerHTML = `
         #custom-modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.4);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 10000;
-            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.4); display: flex; justify-content: center; align-items: center;
+            z-index: 10000; font-family: "Helvetica Neue", Arial, sans-serif;
         }
         #custom-modal {
-            background-color: #ffffff;
-            width: 90%;
-            max-width: 500px;
-            padding: 30px 25px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            box-sizing: border-box;
-            text-align: left;
+            background: #fff; width: 90%; max-width: 500px; padding: 30px 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2); box-sizing: border-box; text-align: left;
         }
-        #custom-modal .modal-header {
-            color: #d32f2f;
-            font-weight: bold;
-            font-size: 14px;
-            margin-bottom: 12px;
-        }
-        #custom-modal .modal-divider {
-            border: 0;
-            border-top: 1px solid #ccc;
-            margin-bottom: 20px;
-        }
-        #custom-modal .modal-body {
-            font-size: 12px;
-            line-height: 1.6;
-            color: #333333;
-            margin-bottom: 25px;
-            word-break: keep-all;
-        }
-        #custom-modal .modal-footer {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-        }
+        #custom-modal .modal-header { color: #d32f2f; font-weight: bold; font-size: 14px; margin-bottom: 12px; }
+        #custom-modal .modal-divider { border: 0; border-top: 1px solid #ccc; margin-bottom: 20px; }
+        #custom-modal .modal-body { font-size: 12px; line-height: 1.6; color: #333; margin-bottom: 25px; word-break: keep-all; }
+        #custom-modal .modal-footer { display: flex; justify-content: center; gap: 15px; }
+        
+        /* ボタン共通設定 */
         #custom-modal .modal-footer button {
-            border: none;
-            padding: 8px 24px;
-            font-size: 13px;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 2px;
-            min-width: 110px;
+            border: none; padding: 8px 24px; font-size: 13px; font-weight: bold;
+            cursor: pointer; border-radius: 2px; min-width: 110px; transition: background 0.2s;
         }
-        #custom-modal .btn-submit {
-            background-color: #009688;
-            color: #ffffff;
-        }
-        #custom-modal .btn-submit:hover {
-            background-color: #00796b;
-        }
-        #custom-modal .btn-cancel {
-            background-color: #e0e0e0;
-            color: #333333;
-        }
-        #custom-modal .btn-cancel:hover {
-            background-color: #d5d5d5;
-        }
+        /* ボタン固有カラー設定 */
+        #custom-modal .btn-submit { background: #009688; color: #fff; }
+        #custom-modal .btn-submit:hover { background: #00796b; }
+        #custom-modal .btn-cancel { background: #e0e0e0; color: #333; }
+        #custom-modal .btn-cancel:hover { background: #d5d5d5; }
     `;
     document.head.appendChild(style);
 
