@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>モーダルテスト</title>
+  <!-- shutto翻訳 -->
+  <script src="https://staging-d.ea-shutto-translation.net/trans.js?id=1411"></script>
+  <script>
+__stt.on('selectLang', function(event) {
+    // === 1. HTML構造の作成 ===
+    // 背景のオーバーレイ
+    const overlay = document.createElement('div');
+    overlay.id = 'custom-modal-overlay';
+
+    // モーダル本体
+    const modal = document.createElement('div');
+    modal.id = 'custom-modal';
+
+    // コンテンツの組み立て
+    modal.innerHTML = `
+        <div class="modal-header">&lt;외국어 번역에 대해&gt;</div>
+        <hr class="modal-divider">
+        <div class="modal-body">
+            홈페이지를 자동 번역 서비스를 이용하여 외국어로 번역합니다.<br>
+            본 서비스는 자동번역 시스템이므로 제대로 번역할 수 없는 경우가 있으며, 번역전 페이지의 본래 내용과 다를 수 있습니다.<br>
+            또, 당 서비스의 이용에 의해, 직접적 혹은 간접적으로 어떠한 손해가 생겼을 경우, 일절의 책임을 지지 않습니다. 미리 양해 바랍니다.
+        </div>
+        <div class="modal-footer">
+            <button class="btn-submit" id="modal-btn-submit">언어들 전환</button>
+            <button class="btn-cancel" id="modal-btn-cancel">캔슬</button>
+        </div>
+    `;
+
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+
+    // === 2. CSSスタイルの適用 ===
+    const style = document.createElement('style');
+    style.innerHTML = `
+        /* 背景の黒透過（オーバーレイ） */
+        #custom-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+        }
+        /* モーダルウィンドウ本体 */
+        #custom-modal {
+            background-color: #ffffff;
+            width: 90%;
+            max-width: 500px;
+            padding: 30px 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-sizing: border-box;
+            text-align: left;
+        }
+        /* ヘッダー（赤文字） */
+        #custom-modal .modal-header {
+            color: #d32f2f;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+        /* 区切り線 */
+        #custom-modal .modal-divider {
+            border: 0;
+            border-top: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+        /* 説明文 */
+        #custom-modal .modal-body {
+            font-size: 11px;
+            line-height: 1.6;
+            color: #333333;
+            margin-bottom: 25px;
+            word-break: keep-all;
+        }
+        /* ボタン配置エリア */
+        #custom-modal .modal-footer {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        /* 共通ボタンスタイル */
+        #custom-modal .modal-footer button {
+            border: none;
+            padding: 8px 24px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 2px;
+            min-width: 90px;
+        }
+        /* 緑のボタン（言語切り替え） */
+        #custom-modal .btn-submit {
+            background-color: #009688;
+            color: #ffffff;
+        }
+        #custom-modal .btn-submit:hover {
+            background-color: #00796b;
+        }
+        /* グレーのボタン（キャンセル） */
+        #custom-modal .btn-cancel {
+            background-color: #e0e0e0;
+            color: #333333;
+        }
+        #custom-modal .btn-cancel:hover {
+            background-color: #d5d5d5;
+        }
+    `;
+    document.head.appendChild(style);
+
+    // === 3. ボタンのイベント処理 ===
+    // モーダルを閉じる共通関数
+    function closeModal() {
+        overlay.remove();
+        style.remove();
+    }
+
+    // キャンセルボタン
+    document.getElementById('modal-btn-cancel').addEventListener('click', function() {
+        closeModal();
+        // 必要に応じてキャンセル時の処理をここに記述
+    });
+
+    // 言語切り替え（確定）ボタン
+    document.getElementById('modal-btn-submit').addEventListener('click', function() {
+        closeModal();
+        // 確定時の処理（例: 翻訳ロジックの実行など）をここに記述
+        console.log('Language transition confirmed.');
+    });
+});
+</script>
+</head>
+<body>
+  <main>
+    <link rel="stylesheet" href="style/test.css">
+    <h1>これはサンプルのページです</h1>
+    <div>テストです</div>
+  </main>
+</body>
+</html>
