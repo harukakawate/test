@@ -16,16 +16,16 @@ __stt.on('selectLang', function(event) {
     modal.id = 'custom-modal';
 
     modal.innerHTML = `
-        <div class="modal-header">&lt;외국어 번역에 대해&gt;</div>
+        <div class="modal-header">&lt;外国語翻訳について&gt;</div>
         <hr class="modal-divider">
         <div class="modal-body">
-            홈페이지를 자동 번역 서비스를 이용하여 외국어로 번역합니다.<br>
-            본 서비스는 자동번역 시스템이므로 제대로 번역할 수 없는 경우가 있으며, 번역전 페이지의 본래 내용과 다를 수 있습니다.<br>
-            또, 당 서비스의 이용에 의해, 직접적 혹은 간접적으로 어떠한 손해가 생겼을 경우, 일절의 책임을 지지 않습니다. 미리 양해 바랍니다.
+            自動翻訳サービスを利用して、ホームページを外国語に翻訳します。<br>
+            本サービスは自動翻訳システムであるため、正しく翻訳されない場合があり、翻訳前のページの本来の内容と異なることがあります。<br>
+            また、本サービスのご利用により生じた直接的または間接的な損害について、当社は一切の責任を負いません。あらかじめご了承ください。
         </div>
         <div class="modal-footer">
-            <button class="btn-submit" id="modal-btn-submit">언어들 전환</button>
-            <button class="btn-cancel" id="modal-btn-cancel">캔슬</button>
+            <button class="btn-submit" id="modal-btn-submit">言語を切り替える</button>
+            <button class="btn-cancel" id="modal-btn-cancel">キャンセル</button>
         </div>
     `;
 
@@ -46,7 +46,7 @@ __stt.on('selectLang', function(event) {
             justify-content: center;
             align-items: center;
             z-index: 10000;
-            font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
         }
         #custom-modal {
             background-color: #ffffff;
@@ -69,11 +69,11 @@ __stt.on('selectLang', function(event) {
             margin-bottom: 20px;
         }
         #custom-modal .modal-body {
-            font-size: 11px;
+            font-size: 12px;
             line-height: 1.6;
             color: #333333;
             margin-bottom: 25px;
-            word-break: keep-all;
+            word-break: break-all;
         }
         #custom-modal .modal-footer {
             display: flex;
@@ -87,7 +87,7 @@ __stt.on('selectLang', function(event) {
             font-weight: bold;
             cursor: pointer;
             border-radius: 2px;
-            min-width: 90px;
+            min-width: 100px;
         }
         #custom-modal .btn-submit {
             background-color: #009688;
@@ -107,27 +107,24 @@ __stt.on('selectLang', function(event) {
     document.head.appendChild(style);
 
     // === 3. ボタンのイベント処理 ===
-    // モーダルを閉じる共通関数
     function closeModal() {
         overlay.remove();
         style.remove();
     }
 
-    // キャンセル（いいえ）ボタン押下時の処理
+    // キャンセルボタン押下時
     document.getElementById('modal-btn-cancel').addEventListener('click', function() {
-        closeModal(); // モーダルを閉じる
+        closeModal();
 
-        // ご提示いただいた「いいえ」の処理を実行
         __stt.set('lang', 'ja');
         if (location.search.match(/\?from\=(.*)/)) {
             location.href = location.search.match(/\?from\=(.*)/)[1];
         }
     });
 
-    // 言語切り替え（確定）ボタン押下時の処理
+    // 言語切り替え（確定）ボタン押下時
     document.getElementById('modal-btn-submit').addEventListener('click', function() {
         closeModal();
-        // 確定時の処理をここに記述
         console.log('Language transition confirmed.');
     });
 });
