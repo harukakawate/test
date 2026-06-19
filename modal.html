@@ -8,29 +8,85 @@
   <!-- ここからモーダルスクリプトテスト -->
 <script>
 __stt.on('selectLang', function(event) {
-    const originalLang = 'ja'
+    const originalLang = 'ja';
     if (event.lang == originalLang) return;
+    
     // === 重複表示防止ガード ===
     if (document.getElementById('custom-modal-overlay')) return;
+
+    // === 言語ごとのテキスト定義 ===
+    const textData = {
+        en: {
+            header: '&lt;About Foreign Language Translation&gt;',
+            body: `We will translate the homepage into a foreign language using the automatic translation service.<br>
+                   Since this service is an automatic translation system, it may not be translated correctly and may differ from the original content of the page before translation.<br>
+                   In addition, we do not take any responsibility for any direct or indirect damage caused by using this service. Thank you for your understanding in advance.`,
+            submit: 'Switch language',
+            cancel: 'Cancel'
+        },
+        ko: {
+            header: '&lt;외국어 번역에 대해&gt;',
+            body: `홈페이지를 자동 번역 서비스를 이용하여 외국어로 번역합니다.<br>
+                   본 서비스는 자동번역 시스템이므로 제대로 번역할 수 없는 경우가 있으며, 번역전 페이지의 본래 내용과 다를 수 있습니다.<br>
+                   또, 당 서비스의 이용에 의해, 직접적 혹은 간접적으로 어떠한 손해가 생겼을 경우, 일절의 책임을 지지 않습니다. 미리 양해 바랍니다.`,
+            submit: '언어를 전환',
+            cancel: '캔슬'
+        },
+        'zh-tw': {
+            header: '&lt;關於外文翻譯&gt;',
+            body: `使用自動翻譯服務，將網頁翻譯成外文。<br>
+                   本服務為自動翻譯系統，有可能無法正確翻譯，或與翻譯前的頁面內容有差異。<br>
+                   如使用本服務直接地或間接地造成任何損失的情形，本公司一概不予負責．請您事先諒解。`,
+            submit: '轉換語言',
+            cancel: '取消'
+        },
+        'zh-hk': {
+            header: '&lt;關於外文翻譯&gt;',
+            body: `使用自動翻譯服務，將網頁翻譯成外文。<br>
+                   本服務為自動翻譯系統，有可能無法正確翻譯，或與翻譯前的頁面內容有差異。<br>
+                   如使用本服務直接地或間接地造成任何損失的情形，本公司一概不予負責．請您事先諒解。`,
+            submit: '轉換語言',
+            cancel: '取消'
+        },
+        'zh-cn': {
+            header: '&lt;关于外语翻译&gt;',
+            body: `使用自动翻译服务，将网页翻译成外语。<br>
+                   本服务为自动翻译系统，有可能无法正确翻译，或与翻译前的页面内容有差异。<br>
+                   如使用本服务直接地或间接地造成任何损失的情形，本公司一概不予负责。请您事先谅解。`,
+            submit: '转换语言',
+            cancel: '取消'
+        },
+        'zh': {
+            header: '&lt;关于外语翻译&gt;',
+            body: `使用自动翻译服务，将网页翻译成外语。<br>
+                   本服务为自动翻译系统，有可能无法正确翻译，或与翻译前的页面内容有差异。<br>
+                   如使用本服务直接地或间接地造成任何损失的情形，本公司一概不予负责。请您事先谅解。`,
+            submit: '转换语言',
+            cancel: '取消'
+        }
+    };
+
+    // 該当する言語がない場合のデフォルトは英語（en）
+    const currentText = textData[event.lang] || textData['en'];
 
     // === 1. HTML構造の作成 ===
     const overlay = document.createElement('div');
     overlay.id = 'custom-modal-overlay';
+    // 翻訳除外属性を追加
+    overlay.setAttribute('data-stt-ignore', '');
 
     const modal = document.createElement('div');
     modal.id = 'custom-modal';
+    // 念のためモーダル本体にも翻訳除外属性を追加
+    modal.setAttribute('data-stt-ignore', '');
 
     modal.innerHTML = `
-        <div class="modal-header">&lt;外国語翻訳について&gt;</div>
+        <div class="modal-header">${currentText.header}</div>
         <hr class="modal-divider">
-        <div class="modal-body">
-            自動翻訳サービスを利用して、ホームページを外国語に翻訳します。<br>
-            本サービスは自動翻訳システムであるため、正しく翻訳されない場合があり、翻訳前のページの本来の内容と異なることがあります。<br>
-            また、本サービスのご利用により生じた直接的または間接的な損害について、当社は一切の責任を負いません。あらかじめご了承ください。
-        </div>
+        <div class="modal-body">${currentText.body}</div>
         <div class="modal-footer">
-            <button class="btn-submit" id="modal-btn-submit">言語を切り替える</button>
-            <button class="btn-cancel" id="modal-btn-cancel">キャンセル</button>
+            <button class="btn-submit" id="modal-btn-submit">${currentText.submit}</button>
+            <button class="btn-cancel" id="modal-btn-cancel">${currentText.cancel}</button>
         </div>
     `;
 
@@ -79,7 +135,7 @@ __stt.on('selectLang', function(event) {
             line-height: 1.6;
             color: #333333;
             margin-bottom: 25px;
-            word-break: break-all;
+            word-break: keep-all;
         }
         #custom-modal .modal-footer {
             display: flex;
@@ -93,7 +149,7 @@ __stt.on('selectLang', function(event) {
             font-weight: bold;
             cursor: pointer;
             border-radius: 2px;
-            min-width: 100px;
+            min-width: 110px;
         }
         #custom-modal .btn-submit {
             background-color: #009688;
@@ -121,11 +177,7 @@ __stt.on('selectLang', function(event) {
     // キャンセルボタン押下時
     document.getElementById('modal-btn-cancel').addEventListener('click', function(e) {
         e.preventDefault();
-        
-        // 1. 即座にモーダルを削除
         closeModal();
-
-        // 2. ご指定のコードを実行
         __stt.set('lang', originalLang);
     });
 
@@ -133,7 +185,6 @@ __stt.on('selectLang', function(event) {
     document.getElementById('modal-btn-submit').addEventListener('click', function(e) {
         e.preventDefault();
         closeModal();
-        // 確定時の処理をここに記述
     });
 });
 </script>
