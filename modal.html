@@ -8,6 +8,10 @@
   <!-- ここからモーダルスクリプトテスト -->
 <script>
 __stt.on('selectLang', function(event) {
+    // === 重複防止チェック ===
+    // すでにモーダルが表示されている場合は重ねて表示しない
+    if (document.getElementById('custom-modal-overlay')) return;
+
     // === 1. HTML構造の作成 ===
     const overlay = document.createElement('div');
     overlay.id = 'custom-modal-overlay';
@@ -16,10 +20,10 @@ __stt.on('selectLang', function(event) {
     modal.id = 'custom-modal';
 
     modal.innerHTML = `
-        <div class="modal-header">&lt;翻訳について&gt;</div>
+        <div class="modal-header">&lt;外国語翻訳について&gt;</div>
         <hr class="modal-divider">
         <div class="modal-body">
-            自動翻訳サービスを利用して、ホームページを翻訳します。<br>
+            自動翻訳サービスを利用して、ホームページを外国語に翻訳します。<br>
             本サービスは自動翻訳システムであるため、正しく翻訳されない場合があり、翻訳前のページの本来の内容と異なることがあります。<br>
             また、本サービスのご利用により生じた直接的または間接的な損害について、当社は一切の責任を負いません。あらかじめご了承ください。
         </div>
@@ -34,6 +38,7 @@ __stt.on('selectLang', function(event) {
 
     // === 2. CSSスタイルの適用 ===
     const style = document.createElement('style');
+    style.id = 'custom-modal-style';
     style.innerHTML = `
         #custom-modal-overlay {
             position: fixed;
@@ -107,24 +112,32 @@ __stt.on('selectLang', function(event) {
     document.head.appendChild(style);
 
     // === 3. ボタンのイベント処理 ===
+    // モーダルを閉じる共通関数
     function closeModal() {
-        overlay.remove();
-        style.remove();
+        if (overlay.parentNode) overlay.remove();
+        if (style.parentNode) style.remove();
     }
 
-    // キャンセルボタン押下時
-    document.getElementById('modal-btn-cancel').addEventListener('click', function() {
+    // キャンセルボタン押下時（1回のクリックで即時実行）
+    document.getElementById('modal-btn-cancel').addEventListener('click', function(e) {
+        e.preventDefault(); // 親要素へのイベント伝播やデフォルト挙動を阻止
+        
+        // 1. まず確実に画面からモーダル要素を消す
         closeModal();
 
+        // 2. その後、ご指定のバック処理・画面遷移を行う
         __stt.set('lang', 'ja');
-        if (location.search.match(/\?from\=(.*)/)) {
-            location.href = location.search.match(/\?from\=(.*)/)[1];
+        const match = location.search.match(/\?from\=(.*)/);
+        if (match && match[1]) {
+            location.href = match[1];
         }
     });
 
     // 言語切り替え（確定）ボタン押下時
-    document.getElementById('modal-btn-submit').addEventListener('click', function() {
+    document.getElementById('modal-btn-submit').addEventListener('click', function(e) {
+        e.preventDefault();
         closeModal();
+        // 確定時の処理をここに記述
         console.log('Language transition confirmed.');
     });
 });
